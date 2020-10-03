@@ -4,7 +4,7 @@
 #include "key.h"
 #include "SysTick.h"
 
-u8 key=0;
+
 u8 key_down=0;
 
 void EXTI_Configuration(){
@@ -26,11 +26,11 @@ void EXTI_Configuration(){
 	EXTI_Init(&EXTI_InitStruct);
 	
 			
-  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_3);
+  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 	
 	NVIC_InitStruct.NVIC_IRQChannel = EXTI0_IRQn; 
 	NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority = 2;
-	NVIC_InitStruct.NVIC_IRQChannelSubPriority = 1;
+	NVIC_InitStruct.NVIC_IRQChannelSubPriority = 2;
 	NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
 	
 	NVIC_Init(&NVIC_InitStruct);
@@ -39,16 +39,11 @@ void EXTI_Configuration(){
 
 void EXTI0_IRQHandler() 
 {       
-        
-	      delay_ms_cpu(300);  
-        if(GPIO_ReadInputDataBit(GPIOA,0) == 0){
-          //¾ÍÊÇkey_down                                         
-          if(key%2==0) 
-					  key_down=1;
-          else if(key%2==1)
-            key_down=0;		
-          ++key;					
-				}
+        Delay_ms(10);                                          
+        if(Key_Scan(GPIOA,0)==1)                                             
+        {     
+					key_down=1; 
+        }                 
         EXTI_ClearITPendingBit(EXTI_Line0);  
 }
 
